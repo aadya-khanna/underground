@@ -82,6 +82,7 @@
     flex-wrap: wrap; /* Allows wrapping on smaller screens */
   }
   
+  
 .speech-bubble {
     max-width: 40vw;
     background: #FFFFE3;
@@ -112,31 +113,56 @@
   /* Small Devices (Phones, less than 600px) */
     @media screen and (max-width: 600px) {
         #pet-options {
-        font-size: 6vw; /* Increased for better touch visibility */
-        padding: 3vh 2vw;
+            font-size: 6vw; 
+            padding: 3vh 2vw;
         }
     
         #hero {
-        font-size: 6.5vw;
+            font-size: 6.5vw;
         }
     
         #mainimg {
-        width: 60vw;
+            width: 60vw;
         }
 
-        #speech-bubble {
-            font-size: 5vw;
-            max-width: 60vw;
+        .speech-bubble {
+            font-size: 4vw;
+            max-width: 80vw;
+            margin-bottom: 10px;
             order: 1;
+            margin-right: 0;
+        }
+
+        .speech-bubble::after {
+            top: 100%;
+            left: 50%;
+            right: auto;
+            transform: translateX(-50%) rotate(180deg);
+            border-width: 10px;
+            border-style: solid;
+            border-color: #FFFFE3 transparent transparent transparent;
           }
         
-          #img {
-            order: 2;
-          }
-        
-          #pet-container {
+         #img {
             flex-direction: column;
+            flex-wrap: nowrap;
           }
+        
+        #pet-container {
+            flex-direction: column;
+        }
+        
+        #speech {
+            font-size: 5rem; /* Slightly larger text in the bubble */
+            max-width: 85%; /* Adjust max-width to fit screen */
+            margin-bottom: 1rem; /* Add margin to bottom for spacing */
+        }
+    
+        #speech::after {
+            left: 50%; 
+            transform: translateX(-50%) rotate(180deg); 
+        }
+
     }
   
   
