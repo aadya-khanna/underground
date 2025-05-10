@@ -22,9 +22,12 @@
         <span onclick="selectPet('steve')">steve</span>
     </div>
     
-    <div id="img">
-        <img id="mainimg" style="display: none;">
-    </div>
+    <div id="pet-container">
+        <div id="img">
+            <div id="petSpeech" class="speech-bubble"></div>
+            <img id="mainimg" style="display: none;" />
+        </div>
+      </div>
 
     <script> 
         let typeItInstance;
@@ -38,25 +41,22 @@
 
             const randomSalutation = salutations[Math.floor(Math.random() * salutations.length)];
 
-    // Destroy old typewriter instance if it exists
             if (typeItInstance) {
                 typeItInstance.destroy();
             }
 
             if (!hasTypedHi) {
-                // Start by typing "Hi!" if it hasn't been typed yet
                 typeItInstance = new TypeIt("#simpleUsage", {
                 speed: 100,
                 lifeLike: true,
                 waitUntilVisible: true
                 })
-                .type("Hi!")  // Type Hi! only once
+                .type("Hi!")  
                 .pause(300)
                 .go();
 
                 hasTypedHi = true;
             } else {
-                // After "Hi!" is typed, we want to clear the rest of the line and type the new pet's name
                 target.textContent = randomSalutation;
                 typeItInstance = new TypeIt("#simpleUsage", {
                 startDelay: 300,
@@ -65,20 +65,41 @@
                 waitUntilVisible: true,
                 cursor: true
                 })
-                .move(null, { to: "END" })  // Move cursor to the end of "Hi!"
-                .type(` I am ${name}.`)  // Append the new pet's name
+                .move(null, { to: "END" }) 
+                .type(` I am ${name}.`)  
                 .go();
             }
         }
 
-        function selectPet(pet) {
-        const img = document.getElementById("mainimg");
-        startTypewriter(pet);
-        img.src = `images/${pet}.png`;
-        img.style.display = "block";
+        function selectPet(pet) 
+        {
+            const img = document.getElementById("mainimg");
+            const speech = document.getElementById("petSpeech");
+            const randomQuote = getRandomMessage(pet);
+
+            startTypewriter(pet);
+
+            img.src = `images/${pet}.png`;
+            img.style.display = "block";
+
+            speech.textContent = randomQuote;
+        speech.style.display = "block";
         }
 
         startTypewriter("");  
+
+        const petMessages = {
+            bob: ["I'm feeling fabulous!", "Let’s roll!", "You rang?", "Catch me if you can!"],
+            simmer: ["Stay calm, I’m simmering.", "Just chillin’ like a villain.", "Ready to vibe?", "Don’t touch my tail."],
+            steve: ["Steve LE WOAHHHH!", "What’s the mission?", "Do you french, mon ami?", "Let’s boogie!"]
+        };
+
+        function getRandomMessage(pet)
+        {
+            const messages = petMessages[pet];
+            return messages[Math.floor(Math.random() * messages.length)];
+        }
+
     </script>
 </body>
 </html>

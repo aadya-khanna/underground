@@ -72,6 +72,39 @@
   #pet-options span:hover {
     color: #FFA500;
   }
+
+  #pet-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 2vh;
+    gap: 3vw;
+    flex-wrap: wrap; /* Allows wrapping on smaller screens */
+  }
+  
+.speech-bubble {
+    max-width: 40vw;
+    background: #FFFFE3;
+    color: black;
+    padding: 1em;
+    border-radius: 10px;
+    position: relative;
+    font-size: 1.2vw;
+    font-family: Excon;
+    margin-right: 0.5vw;
+    display: none;
+}
+
+.speech-bubble::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: -20px;
+    transform: translateY(-50%);
+    border-width: 10px;
+    border-style: solid;
+    border-color: transparent transparent transparent #FFFFE3;
+}
   
   /* ─────── MEDIA QUERIES ─────── */
   
@@ -90,6 +123,20 @@
         #mainimg {
         width: 60vw;
         }
+
+        #speech-bubble {
+            font-size: 5vw;
+            max-width: 60vw;
+            order: 1;
+          }
+        
+          #img {
+            order: 2;
+          }
+        
+          #pet-container {
+            flex-direction: column;
+          }
     }
   
   
