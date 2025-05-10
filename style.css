@@ -96,15 +96,15 @@
   /* Laptops & Desktops (1025px and up) */
   @media screen and (min-width: 1025px) {
     #hero {
-      font-size: 2.5vw;
+      font-size: 3.5vw;
     }
   
     #pet-options {
-      font-size: 1.5vw;
+      font-size: 2.5vw;
     }
   
     #mainimg {
-      width: 20vw;
+      width: 40vw;
     }
   }
   
