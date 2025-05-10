@@ -5,26 +5,75 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <script src="https://unpkg.com/typeit@8.7.1/dist/index.umd.js"></script>
-    <title> LE POISSON STEVE! </title>
+    <title> PetIt </title>
 </head>
 <body>
     <div id="hero"> 
-        <h1 id="simpleUsage"> Hi, I am Steve. </h1>
+        <h1 id="simpleUsage"> </h1>
     </div>
 
-    <div id = "img">
-        <img src="steve.png" id="mainimg">
+    <div id="pet-options">
+        <span onclick="selectPet('bob')">bob</span> |
+        <span onclick="selectPet('simmer')">simmer</span> |
+        <span onclick="selectPet('steve')">steve</span>
+    </div>
+    
+    <div id="img">
+        <img id="mainimg" style="display: none;">
     </div>
 
     <script> 
-        new TypeIt("#simpleUsage", {
-        speed: 140,
-        lifeLike: true,
-        loop: true, 
-        loopDelay: 500,
-        waitUntilVisible: true,
-        }).go();
-     
+        let typeItInstance;
+        let hasTypedHi = false;
+        let salutations = ["Hi!", "Hello!", "AHOJJJ!", "Bonjour,", "Hola,", "Hey,", "Sup!!"]; 
+        let i = Math.floor(Math.random() * salutations.length);
+
+        function startTypewriter(pet) {
+        const name = pet.charAt(0).toUpperCase() + pet.slice(1);
+        const target = document.getElementById("simpleUsage");
+
+    // Destroy old typewriter instance if it exists
+        if (typeItInstance) {
+            typeItInstance.destroy();
+        }
+
+        if (!hasTypedHi) {
+            // Start by typing "Hi!" if it hasn't been typed yet
+            typeItInstance = new TypeIt("#simpleUsage", {
+            speed: 100,
+            lifeLike: true,
+            waitUntilVisible: true
+            })
+            .type("Hi!")  // Type Hi! only once
+            .pause(300)
+            .go();
+
+            hasTypedHi = true;
+        } else {
+            // After "Hi!" is typed, we want to clear the rest of the line and type the new pet's name
+            target.textContent = salutations[i]; // Clear any previously typed pet name
+            typeItInstance = new TypeIt("#simpleUsage", {
+            startDelay: 300,
+            speed: 100,
+            lifeLike: true,
+            waitUntilVisible: true,
+            cursor: true
+            })
+            .move(null, { to: "END" })  // Move cursor to the end of "Hi!"
+            .type(` I am ${name}.`)  // Append the new pet's name
+            .go();
+        }
+        }
+
+        function selectPet(pet) {
+        const img = document.getElementById("mainimg");
+        startTypewriter(pet);
+        img.src = `images/${pet}.png`;
+        img.style.display = "block";
+        }
+
+        // Initialize with just "Hi!" typed on page load
+        startTypewriter("");  // This keeps "Hi!" visible initially
     </script>
 </body>
 </html>

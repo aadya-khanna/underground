@@ -31,11 +31,38 @@ html, body {
     align-items: center;
     text-align: center;
     height: 25vh;
-    
+    z-index: 1;
+    padding-top: 2vh;
+    position: relative;
 }
 
 #mainimg {
-   display: block;
+   display: none;
    width: 25%; /* Ensure the image doesn't overflow the container */
    height: auto; /* Keep the aspect ratio intact */
+   alt: "Selected Pet";
 }
+
+#pet-options {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    color: #FFFFE3;
+    font-family: Excon;
+    font-size: 1.2rem;
+    padding: 20px; 
+    padding-bottom: 40px;
+    cursor: pointer;
+    z-index: 10;
+    position: relative;
+  }
+  
+  #pet-options span {
+    transition: color 0.3s;
+  }
+  
+  #pet-options span:hover {
+    color: #FFA500; /* Change on hover */
+  }
+  
