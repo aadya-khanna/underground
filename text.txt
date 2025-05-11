@@ -1,2 +1,1 @@
-1- Option to choose your pet
-2- Option to get it to say something (customise it's saying)
+- chat box with natural llm   

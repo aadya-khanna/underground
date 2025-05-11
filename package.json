@@ -1,0 +1,32 @@
+{
+  "type": "module",
+  "name": "underground",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aadya-khanna/underground.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aadya-khanna/underground/issues"
+  },
+  "homepage": "https://github.com/aadya-khanna/underground#readme",
+  "description": "",
+  "dependencies": {
+    "@huggingface/inference": "^3.12.1",
+    "axios": "^1.9.0",
+    "cohere-ai": "^7.17.1",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "node-fetch": "^3.3.2",
+    "openai": "^4.98.0",
+    "socket.io": "^4.8.1"
+  }
+}

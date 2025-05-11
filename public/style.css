@@ -1,0 +1,259 @@
+@font-face {
+    font-family: 'Excon';
+    src: url('fonts/Excon-Black.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+  }
+  
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100%;
+    background-color: black;
+    overflow-x: hidden;
+  }
+  
+  /* Hero Text */
+  #hero {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding-top: 15vh;
+    padding-bottom: 2vh;
+    color: #FFFFE3;
+    font-family: Excon;
+    font-size: 5vw;
+  }
+  
+  /* Typewriter Text */
+  #simpleUsage {
+    margin-bottom: 0;
+    word-wrap: break-word;
+    max-width: 90vw;
+  }
+  
+  /* Image Section */
+  #img {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding-top: 2vh;
+    height: auto;
+  }
+  
+  #mainimg {
+    display: none;
+    width: 40vw;
+    max-width: 300px;
+    height: auto;
+  }
+  
+  /* Pet Option Buttons */
+  #pet-options {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    color: #FFFFE3;
+    font-family: Excon;
+    font-size: 4vw;
+    padding: 2vh 1vw 4vh 1vw;
+    cursor: pointer;
+  }
+  
+  #pet-options span {
+    transition: color 0.3s;
+  }
+  
+  #pet-options span:hover {
+    color: #FFA500;
+  }
+
+  #pet-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 2vh;
+    gap: 3vw;
+    flex-wrap: wrap; /* Allows wrapping on smaller screens */
+  }
+  
+  
+.speech-bubble {
+    max-width: 40vw;
+    background: #FFFFE3;
+    color: black;
+    padding: 1em;
+    border-radius: 10px;
+    position: relative;
+    font-size: 1.2vw;
+    font-family: Excon;
+    margin-right: 0.5vw;
+    display: none;
+}
+
+.speech-bubble::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: -20px;
+    transform: translateY(-50%);
+    border-width: 10px;
+    border-style: solid;
+    border-color: transparent transparent transparent #FFFFE3;
+}
+
+#chat-box {
+    width: 25vw;
+    max-width: 600px;
+    margin: 3vh auto;
+    padding: 0.75rem;
+    background-color: #1a1a1a;
+    border: 2px solid #FFA500;
+    border-radius: 15px;
+    font-family: Excon;
+    color: #FFFFE3;
+    box-shadow: 0 0 12px rgba(255, 165, 0, 0.2);
+    position: fixed;   
+    bottom: 1.5rem;        
+    right: 1.5rem;          
+    width: 260px, 20vw, 320px; /* ✅ Responsive width */
+    z-index: 999;       
+}
+
+#chat-messages {
+    max-height: 40vh;
+    overflow-y: auto;
+    margin-bottom: 2vh;
+    font-size: clamp(1rem, 2.5vw, 1.1rem);
+    padding: 1vh;
+}
+
+#chat-input-area {
+    display: flex;
+    gap: 2vw;
+    align-items: center;
+}
+
+#chat-input {
+    flex: 1;
+    padding: 0.6rem 1rem;
+    font-size: clamp(1rem, 2.5vw, 1.1rem);
+    border-radius: 0.5rem;
+    border: none;
+    background-color: #2b2b2b;
+    color: #f0f0d8;
+    font-family: Excon, sans-serif;
+    font-weight: 700;
+}
+
+#chat-send {
+padding: 0.6rem 1.2rem;
+  background-color: #ffaa00;
+  color: black;
+  font-weight: bold;
+  font-family: Excon, sans-serif;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  transition: transform 0.1s ease-in-out;
+}
+
+#chat-send:hover {
+    background-color: #ffbf36;
+    transform: scale(1.05);
+}
+
+  
+  /* ─────── MEDIA QUERIES ─────── */
+  
+  /* Tablets (601px to 1024px) */
+  /* Small Devices (Phones, less than 600px) */
+    @media screen and (max-width: 600px) {
+        #pet-options {
+            font-size: 6vw; 
+            padding: 3vh 2vw;
+        }
+    
+        #hero {
+            font-size: 6.5vw;
+        }
+    
+        #mainimg {
+            width: 60vw;
+        }
+
+        .speech-bubble {
+            font-size: 4vw;
+            max-width: 80vw;
+            margin-bottom: 10px;
+            order: 1;
+            margin-right: 0;
+        }
+
+        .speech-bubble::after {
+            top: 100%;
+            left: 50%;
+            right: auto;
+            transform: translateX(-50%) rotate(180deg);
+            border-width: 10px;
+            border-style: solid;
+            border-color: #FFFFE3 transparent transparent transparent;
+          }
+        
+         #img {
+            flex-direction: column;
+            flex-wrap: nowrap;
+          }
+        
+        #pet-container {
+            flex-direction: column;
+        }
+        
+        #speech {
+            font-size: 5rem; /* Slightly larger text in the bubble */
+            max-width: 85%; /* Adjust max-width to fit screen */
+            margin-bottom: 1rem; /* Add margin to bottom for spacing */
+        }
+    
+        #speech::after {
+            left: 50%; 
+            transform: translateX(-50%) rotate(180deg); 
+        }
+
+        #chat-box {
+            bottom: 1rem;
+            right: 1rem;
+            left: 1rem;
+            width: auto;
+            flex-direction: column;
+          }
+        
+          #chat-send {
+            width: 100%;
+            margin-top: 0.5rem;
+          }
+
+    }
+  
+  
+  /* Laptops & Desktops (1025px and up) */
+  @media screen and (min-width: 1025px) {
+    #hero {
+      font-size: 3.5vw;
+    }
+  
+    #pet-options {
+      font-size: 2.5vw;
+    }
+  
+    #mainimg {
+      width: 40vw;
+    }
+  }
+  

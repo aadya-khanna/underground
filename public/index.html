@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/typeit@8.7.1/dist/index.umd.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.0/socket.io.js"></script>
+    <title> PetIt </title>
+</head>
+<body>
+    <div id="hero"> 
+        <h1 id="simpleUsage"> </h1>
+    </div>
+
+    <div id="pet-options">
+        <span onclick="selectPet('bob')">bob</span> |
+        <span onclick="selectPet('simmer')">simmer</span> |
+        <span onclick="selectPet('steve')">steve</span>
+    </div>
+    
+    <div id="pet-container">
+        <div id="img">
+            <div id="petSpeech" class="speech-bubble"></div>
+            <img id="mainimg" style="display: none;" />
+        </div>
+    </div>
+
+    <div id="chat-box">
+        <div id="chat-messages"> </div>
+        <div id="chat-input-area">
+          <input type="text" id="chat-input" placeholder="Talk to your pet..." />
+          <button id="chat-send">Send</button>
+        </div>
+      </div>
+      
+    <script> 
+        function openForm() {
+        document.getElementById("myForm").style.display = "block";
+        }
+
+        function closeForm() {
+        document.getElementById("myForm").style.display = "none";
+        }
+
+        let typeItInstance;
+        let hasTypedHi = false;
+        let salutations = ["Hi!", "Hello!", "AHOJJJ!", "Bonjour,", "Hola,", "Hey,", "Sup!!"]; 
+
+        function startTypewriter(pet) 
+        {
+            const name = pet.charAt(0).toUpperCase() + pet.slice(1);
+            const target = document.getElementById("simpleUsage");
+
+            const randomSalutation = salutations[Math.floor(Math.random() * salutations.length)];
+
+            if (typeItInstance) {
+                typeItInstance.destroy();
+            }
+
+            if (!hasTypedHi) {
+                typeItInstance = new TypeIt("#simpleUsage", {
+                speed: 100,
+                lifeLike: true,
+                waitUntilVisible: true
+                })
+                .type("Hi!")  
+                .pause(300)
+                .go();
+
+                hasTypedHi = true;
+            } else {
+                target.textContent = randomSalutation;
+                typeItInstance = new TypeIt("#simpleUsage", {
+                startDelay: 300,
+                speed: 100,
+                lifeLike: true,
+                waitUntilVisible: true,
+                cursor: true
+                })
+                .move(null, { to: "END" }) 
+                .type(` I am ${name}.`)  
+                .go();
+            }
+        }
+
+        let selectedPet = null;
+
+        function selectPet(pet) {
+            selectedPet = pet;  
+
+            const img = document.getElementById("mainimg");
+            const speech = document.getElementById("petSpeech");
+            const randomQuote = getRandomMessage(pet);
+
+            startTypewriter(pet);
+            img.src = `images/${pet}.png`;
+            img.style.display = "block";
+            speech.textContent = randomQuote;
+            speech.style.display = "block";
+        }
+
+        startTypewriter("");  
+
+        const petMessages = {
+            bob: ["I want boba, BOBa!", "Imagine touching grass!", "MOOOOOO?", "What do cows drink?"],
+            simmer: ["Stay calm, I’m simmering.", "Just chillin’ like a villain.", "Ready to vibe, and by vibe I mean scare people?", "Don’t touch my tail."],
+            steve: ["Steve LE WOAHHHHhH", "I love being famous", "Do you french, mon ami?", "Let’s boogieee"]
+        };
+
+        function getRandomMessage(pet)
+        {
+            const messages = petMessages[pet];
+            return messages[Math.floor(Math.random() * messages.length)];
+        }
+
+        const socket = io();
+        
+        socket.on('connect', () => {
+        console.log('Connected to server');
+        });
+
+        // Send the message when the user submits
+        document.getElementById('chat-send').addEventListener('click', function () {
+            const message = document.getElementById('chat-input').value;
+            if (message.trim() === '') return;
+
+            console.log("Sending message:", message, "with pet:", selectedPet); 
+            socket.emit('chat message', { message: message, pet: selectedPet });
+            document.getElementById('chat-input').value = '';  
+        });
+
+        socket.on('pet response', function(reply) {
+            document.getElementById('petSpeech').innerText = reply;  
+        });
+
+        document.getElementById('chat-input').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('chat-send').click();
+            }
+        });
+
+    </script>
+</body>
+</html>
