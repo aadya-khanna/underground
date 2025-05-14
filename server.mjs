@@ -1,68 +1,79 @@
 import dotenv from 'dotenv';
-import { CohereClientV2 } from 'cohere-ai';
+import { CohereClient } from 'cohere-ai';
 import express from 'express';
 import http from 'http';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { Server as socketIo } from 'socket.io';
 
-dotenv.config();  
-console.log("Loaded Cohere key:", process.env.COHERE_API_KEY);
-
+dotenv.config();
 const app = express();
 const server = http.createServer(app);
 const io = new socketIo(server);
+const cohere = new CohereClient({ token: process.env.COHERE_API_KEY });
 
-const cohere = new CohereClientV2({
-  token: process.env.COHERE_API_KEY, 
-});
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-app.use(express.static('public'));
-
+app.use(express.static(path.join(__dirname, 'public')));
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/public/index.html');
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
+
+const chatHistories = new Map();
 
 io.on('connection', (socket) => {
   console.log('a user connected');
+  
+  chatHistories.set(socket.id, []);
 
   socket.on('chat message', async ({ message, pet }) => {
-    console.log(`Received message: "${message}" from pet: "${pet}"`);
-
     if (!message || !pet) {
-      console.error('Message or Pet is undefined');
-      socket.emit('pet response', 'Oops! Something went wrong. Please try again.');
+      socket.emit('pet response', 'Oops! Try again.');
       return;
     }
 
     const petPersonalities = {
-      bob: "a silly, boba-loving cow who answers sarcastically",
-      simmer: "a sassy, slightly spooky cat with chill vibes",
-      steve: "a cheerful, dramatic cartoon fish who likes dancing and being funny"
+      bob: "bob, a silly, boba-loving cow who answers cutely in 1-2 short sentences max. Example: 'Moo... I mean, no. Boba is life!'",
+      simmer: "simmer, a sassy, slightly spooky snake with saractstic, chill vibes. Respond in 1-2 short sentences. Example: 'Ugh, humans. *yawns* What now?'",
+      steve: "steve, a cheerful, dramatic cartoon fish who likes dancing and being funny. Keep replies under 2 sentences. Example: 'RAHH HOWRUUU!'"
     };
 
-    const persona = petPersonalities[pet] || "a friendly animal";
+    const persona = petPersonalities[pet];
+    const history = chatHistories.get(socket.id);
+
+    const conversation = [
+      ...history,
+      { role: 'USER', message: message }
+    ];
 
     try {
-      const response = await cohere.generate({
-          model: 'command-r7b-12-2024',
-          prompt: `You are ${persona}. Reply to this human message: "${message}"`,
-          max_tokens: 100,
-          temperature: 0.8,
+      const response = await cohere.chat({
+        model: 'command-r',
+        chatHistory: conversation,
+        message: `(Stay in character as ${persona}! Reply in 1-2 sentences max. Do not use your own name in the conversation)`,
+        temperature: 0.7,
+        maxTokens: 50,
       });
+
+      const reply = response.text.trim();
       
-        const reply = response.body.generations[0].text.trim();
-        console.log('Sending reply to frontend:', reply); 
-        socket.emit('pet response', reply);
-    
-      } catch (error) {
-        console.error('Error generating response:', error);
-        socket.emit('pet response', 'Oops! Something went wrong.');
-      }
+      chatHistories.set(socket.id, [
+        ...conversation,
+        { role: 'CHATBOT', message: reply }
+      ]);
+
+      socket.emit('pet response', reply);
+    } catch (error) {
+      console.error('Cohere error:', error);
+      socket.emit('pet response', 'Oops! My brain froze.');
+    }
   });
+
   socket.on('disconnect', () => {
+    chatHistories.delete(socket.id); 
     console.log('user disconnected');
   });
 });
 
-server.listen(3001, () => {
-  console.log('listening on *:3001');
-});
+server.listen(3001, () => console.log('Server running on port 3001'));

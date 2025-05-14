@@ -30,8 +30,7 @@
         </div>
     </div>
 
-    <div id="chat-box">
-        <div id="chat-messages"> </div>
+    <div id="chat-container">
         <div id="chat-input-area">
           <input type="text" id="chat-input" placeholder="Talk to your pet..." />
           <button id="chat-send">Send</button>
@@ -49,14 +48,14 @@
 
         let typeItInstance;
         let hasTypedHi = false;
-        let salutations = ["Hi!", "Hello!", "AHOJJJ!", "Bonjour,", "Hola,", "Hey,", "Sup!!"]; 
+        let salutationBob = "Uwuuu, "; 
+        let salutationSteve = "Bonjour!"; 
+        let salutationSimmer = "Supp, "; 
 
         function startTypewriter(pet) 
         {
             const name = pet.charAt(0).toUpperCase() + pet.slice(1);
             const target = document.getElementById("simpleUsage");
-
-            const randomSalutation = salutations[Math.floor(Math.random() * salutations.length)];
 
             if (typeItInstance) {
                 typeItInstance.destroy();
@@ -74,7 +73,15 @@
 
                 hasTypedHi = true;
             } else {
-                target.textContent = randomSalutation;
+                if(pet == "bob") {
+                    target.textContent = salutationBob;
+                }
+                if(pet == "simmer") {
+                    target.textContent = salutationSimmer;
+                }
+                if(pet == "steve") {
+                    target.textContent = salutationSteve;
+                }
                 typeItInstance = new TypeIt("#simpleUsage", {
                 startDelay: 300,
                 speed: 100,
