@@ -125,46 +125,30 @@
             return messages[Math.floor(Math.random() * messages.length)];
         }
 
-        async function sendMessage() {
-        const input = document.getElementById('chat-input');
-        const message = input.value;
-        const pet = selectedPet; // Make sure this is set when selecting a pet!
+        const socket = io();
         
-        if (!message || !pet) return;
-
-        try {
-    // 1. Show "typing" state
-            document.getElementById('petSpeech').textContent = "...";
-            input.disabled = true;
-
-    // 2. Call Vercel endpoint
-            const response = await fetch('/api/chat', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message, pet })
-            });
-            
-    // 3. Update UI
-            const { reply } = await response.json();
-            document.getElementById('petSpeech').textContent = reply;
-    
-    // 4. Clear input
-            input.value = '';
-            input.disabled = false;
-            input.focus();
-
-        } catch (error) {
-            document.getElementById('petSpeech').textContent = "Oops! Try again.";
-            console.error("Chat error:", error);
-        }
-        }
-
-            // Event listeners
-            document.getElementById('chat-send').addEventListener('click', sendMessage);
-            document.getElementById('chat-input').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') sendMessage();
+        socket.on('connect', () => {
+        console.log('Connected to server');
         });
 
+        document.getElementById('chat-send').addEventListener('click', function () {
+            const message = document.getElementById('chat-input').value;
+            if (message.trim() === '') return;
+
+            console.log("Sending message:", message, "with pet:", selectedPet); 
+            socket.emit('chat message', { message: message, pet: selectedPet });
+            document.getElementById('chat-input').value = '';  
+        });
+
+        socket.on('pet response', function(reply) {
+            document.getElementById('petSpeech').innerText = reply;  
+        });
+
+        document.getElementById('chat-input').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('chat-send').click();
+            }
+        });
 
     </script>
 </body>
