@@ -125,21 +125,47 @@
             return messages[Math.floor(Math.random() * messages.length)];
         }
 
+        async function sendMessage() {
+        const input = document.getElementById('chat-input');
+        const message = input.value;
+        const pet = selectedPet; // Make sure this is set when selecting a pet!
         
-            document.getElementById('chat-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const message = document.getElementById('chat-input').value;
-            const pet = selectedPet;
+        if (!message || !pet) return;
 
+        try {
+    // 1. Show "typing" state
+            document.getElementById('petSpeech').textContent = "...";
+            input.disabled = true;
+
+    // 2. Call Vercel endpoint
             const response = await fetch('/api/chat', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ message, pet })
             });
-
+            
+    // 3. Update UI
             const { reply } = await response.json();
             document.getElementById('petSpeech').textContent = reply;
-            });
+    
+    // 4. Clear input
+            input.value = '';
+            input.disabled = false;
+            input.focus();
+
+        } catch (error) {
+            document.getElementById('petSpeech').textContent = "Oops! Try again.";
+            console.error("Chat error:", error);
+        }
+        }
+
+            // Event listeners
+            document.getElementById('chat-send').addEventListener('click', sendMessage);
+            document.getElementById('chat-input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+
     </script>
 </body>
 </html>
