@@ -125,32 +125,21 @@
             return messages[Math.floor(Math.random() * messages.length)];
         }
 
-        const socket = io();
         
-        socket.on('connect', () => {
-        console.log('Connected to server');
-        });
-
-        // Send the message when the user submits
-        document.getElementById('chat-send').addEventListener('click', function () {
+            document.getElementById('chat-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
             const message = document.getElementById('chat-input').value;
-            if (message.trim() === '') return;
+            const pet = selectedPet;
 
-            console.log("Sending message:", message, "with pet:", selectedPet); 
-            socket.emit('chat message', { message: message, pet: selectedPet });
-            document.getElementById('chat-input').value = '';  
-        });
+            const response = await fetch('/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message, pet })
+            });
 
-        socket.on('pet response', function(reply) {
-            document.getElementById('petSpeech').innerText = reply;  
-        });
-
-        document.getElementById('chat-input').addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                document.getElementById('chat-send').click();
-            }
-        });
-
+            const { reply } = await response.json();
+            document.getElementById('petSpeech').textContent = reply;
+            });
     </script>
 </body>
 </html>
